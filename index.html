@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>BOMIS Purnea – School App</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#f15a22" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="BOMIS AI" />
+  <link rel="apple-touch-icon" href="logo.png" />
+  <meta name="description" content="Official App – Birla Open Minds International School, Purnea" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand:#f15a22;--brand-deep:#c93f0e;--brand-glow:rgba(241,90,34,.22);
+  --bg:#0c0805;--bg-panel:#130d08;--bg-card:#1a110b;--bg-glass:rgba(19,13,8,.85);
+  --border:rgba(241,90,34,.14);--border-s:rgba(241,90,34,.28);
+  --text:#f0e8e2;--text-muted:rgba(240,232,226,.5);--text-dim:rgba(240,232,226,.25);
+  --sidebar-w:272px;--header-h:60px;--ff:'Sora',sans-serif;--ffd:'DM Serif Display',serif;
+}
+html,body{height:100%;font-family:var(--ff);background:var(--bg);color:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E")}
+.blob{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0}
+.blob1{width:500px;height:500px;background:radial-gradient(circle,rgba(241,90,34,.16) 0%,transparent 70%);top:-150px;left:-150px}
+.blob2{width:400px;height:400px;background:radial-gradient(circle,rgba(241,90,34,.10) 0%,transparent 70%);bottom:-120px;right:-120px}
+#app{position:relative;z-index:1;display:flex;height:100dvh}
+
+/* SIDEBAR */
+#sidebar{width:var(--sidebar-w);flex-shrink:0;display:flex;flex-direction:column;background:var(--bg-panel);border-right:1px solid var(--border);padding:18px 12px;transition:transform .3s cubic-bezier(.4,0,.2,1);z-index:100}
+.s-logo{display:flex;align-items:center;gap:11px;padding:6px 6px 20px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.s-logo img{width:42px;height:42px;border-radius:10px;object-fit:contain;background:#1a1008;padding:3px}
+.s-logo-txt span:first-child{font-family:var(--ffd);font-size:14.5px;display:block;line-height:1.25}
+.s-logo-txt span:last-child{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);margin-top:2px;display:block}
+.s-nav{flex:1;display:flex;flex-direction:column;gap:3px}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 13px;border-radius:11px;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;border:1px solid transparent;transition:all .18s;user-select:none}
+.nav-item:hover{color:var(--text);background:rgba(241,90,34,.07)}
+.nav-item.active{color:var(--brand);background:rgba(241,90,34,.11);border-color:rgba(241,90,34,.2)}
+.nav-icon{font-size:17px;width:20px;text-align:center;flex-shrink:0}
+.s-footer{margin-top:auto;padding-top:14px;border-top:1px solid var(--border)}
+.contact-card{background:rgba(241,90,34,.07);border:1px solid var(--border);border-radius:11px;padding:12px 13px}
+.contact-card p{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);margin-bottom:5px}
+.contact-card a{font-size:15px;font-weight:700;color:var(--text);text-decoration:none;display:block}
+.contact-card small{font-size:10px;color:var(--text-muted)}
+
+/* MAIN */
+#main{flex:1;display:flex;flex-direction:column;min-width:0}
+
+/* HEADER */
+#header{height:var(--header-h);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:var(--bg-glass);border-bottom:1px solid var(--border);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.h-left{display:flex;align-items:center;gap:11px}
+#menu-btn{display:none;align-items:center;justify-content:center;width:36px;height:36px;border-radius:9px;background:transparent;border:1px solid var(--border);color:var(--text);cursor:pointer;font-size:18px;transition:all .18s}
+#menu-btn:hover{background:var(--brand-glow);border-color:var(--brand)}
+#page-title{font-family:var(--ffd);font-size:17px}
+.live-badge{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2)}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;animation:pdot 2s ease-in-out infinite}
+@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.85)}}
+.live-text{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#22c55e}
+#install-btn{display:none;align-items:center;gap:6px;padding:6px 13px;border-radius:9px;background:var(--brand);color:#fff;border:none;font-family:var(--ff);font-size:12px;font-weight:600;cursor:pointer;transition:all .18s}
+#install-btn:hover{background:var(--brand-deep)}
+#install-btn.show{display:flex}
+
+/* PAGES */
+.page{display:none;flex:1;overflow-y:auto;overflow-x:hidden;padding:26px 20px}
+.page.active{display:flex;flex-direction:column}
+.page::-webkit-scrollbar{width:4px}
+.page::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* CONTENT COMPONENTS */
+.page-wrap{max-width:820px;margin:0 auto;width:100%}
+.section-tag{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--brand);margin-bottom:8px;display:block}
+.section-title{font-family:var(--ffd);font-size:27px;line-height:1.25;margin-bottom:13px}
+.section-title span{color:var(--brand)}
+.section-body{font-size:13.5px;color:var(--text-muted);line-height:1.75}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:20px 22px}
+.card+.card,.card+.highlight-box,.highlight-box+.card{margin-top:16px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:14px}
+.info-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:17px}
+.info-card .ic-icon{font-size:24px;margin-bottom:9px}
+.info-card h4{font-size:13px;font-weight:700;margin-bottom:5px}
+.info-card p{font-size:12px;color:var(--text-muted);line-height:1.6}
+.tag-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.tag{padding:4px 12px;border-radius:20px;background:rgba(241,90,34,.09);border:1px solid rgba(241,90,34,.2);font-size:11.5px;font-weight:600;color:var(--brand)}
+.step{display:flex;gap:14px;align-items:flex-start;padding:15px 0;border-bottom:1px solid var(--border)}
+.step:last-child{border-bottom:none}
+.step-num{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-body h4{font-size:13.5px;font-weight:700;margin-bottom:4px}
+.step-body p{font-size:12.5px;color:var(--text-muted);line-height:1.6}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:11px;background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;font-family:var(--ff);font-size:13px;font-weight:700;border:none;cursor:pointer;text-decoration:none;transition:all .2s;box-shadow:0 4px 14px rgba(241,90,34,.3)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(241,90,34,.45)}
+.btn-outline{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:11px;background:transparent;color:var(--brand);font-family:var(--ff);font-size:13px;font-weight:600;border:1px solid rgba(241,90,34,.35);cursor:pointer;text-decoration:none;transition:all .2s}
+.btn-outline:hover{background:rgba(241,90,34,.08)}
+.btn-row{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+.highlight-box{background:rgba(241,90,34,.08);border:1px solid rgba(241,90,34,.22);border-radius:14px;padding:16px 18px}
+.highlight-box p{font-size:13px;color:var(--text);line-height:1.7}
+.fac-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.fac-item:last-child{border-bottom:none}
+.fac-icon{font-size:22px;width:38px;flex-shrink:0;padding-top:2px}
+.fac-body h4{font-size:13.5px;font-weight:700;margin-bottom:3px}
+.fac-body p{font-size:12.5px;color:var(--text-muted);line-height:1.6}
+.rule-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.rule-item:last-child{border-bottom:none}
+.rule-dot{width:7px;height:7px;border-radius:50%;background:var(--brand);flex-shrink:0;margin-top:6px}
+.rule-item p{font-size:13px;color:var(--text-muted);line-height:1.65}
+.contact-row{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--border)}
+.contact-row:last-child{border-bottom:none}
+.c-icon{width:36px;height:36px;border-radius:9px;background:rgba(241,90,34,.1);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.c-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim)}
+.c-value{font-size:13.5px;font-weight:600;color:var(--text)}
+.c-value a{color:var(--text);text-decoration:none}
+.c-value a:hover{color:var(--brand)}
+.map-wrap{border-radius:13px;overflow:hidden;border:1px solid var(--border);margin-top:15px}
+.map-wrap iframe{display:block;width:100%;height:270px;border:none}
+.social-row{display:flex;gap:9px;margin-top:14px;flex-wrap:wrap}
+.social-btn{display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:9px;border:1px solid var(--border);background:var(--bg-card);font-size:12px;font-weight:600;color:var(--text-muted);text-decoration:none;transition:all .18s}
+.social-btn:hover{border-color:var(--brand);color:var(--brand);background:rgba(241,90,34,.07)}
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:13px}
+thead th{padding:10px 13px;background:rgba(241,90,34,.1);font-weight:700;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--brand);text-align:left}
+thead th:first-child{border-radius:7px 0 0 7px}
+thead th:last-child{border-radius:0 7px 7px 0}
+tbody td{padding:10px 13px;border-bottom:1px solid var(--border);color:var(--text-muted)}
+tbody tr:hover td{background:rgba(241,90,34,.04);color:var(--text)}
+tbody tr:last-child td{border-bottom:none}
+.prog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:11px;margin-top:13px}
+.prog-card{background:rgba(241,90,34,.05);border:1px solid var(--border);border-radius:13px;padding:16px}
+.prog-card .p-icon{font-size:22px;margin-bottom:8px}
+.prog-card h4{font-size:13px;font-weight:700;margin-bottom:2px}
+.prog-card .p-grade{font-size:10.5px;color:var(--brand);font-weight:600;margin-bottom:6px}
+.prog-card p{font-size:11.5px;color:var(--text-muted);line-height:1.6}
+.person-card{display:flex;align-items:center;gap:14px}
+.p-avatar{width:52px;height:52px;border-radius:13px;background:linear-gradient(135deg,var(--brand),var(--brand-deep));display:flex;align-items:center;justify-content:center;font-size:23px;flex-shrink:0}
+.p-name{font-size:15px;font-weight:700}
+.p-role{font-size:10.5px;color:var(--text-muted);font-weight:500;margin-top:2px}
+.p-quote{font-size:12.5px;color:var(--text-muted);line-height:1.7;margin-top:12px;font-style:italic;border-left:2px solid var(--brand);padding-left:12px}
+
+/* CHAT */
+#page-chat{padding:0}
+#page-chat.active{display:flex;flex-direction:column}
+#chat-area{flex:1;overflow-y:auto;padding:22px 18px;scroll-behavior:smooth}
+#chat-area::-webkit-scrollbar{width:4px}
+#chat-area::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.msgs-wrap{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:17px}
+.msg{display:flex;gap:10px;align-items:flex-end;animation:min .32s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes min{from{opacity:0;transform:translateY(13px) scale(.97)}to{opacity:1;transform:none}}
+.msg.user{flex-direction:row-reverse}
+.m-av{width:33px;height:33px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px}
+.m-av.bot{background:linear-gradient(135deg,var(--brand),var(--brand-deep));box-shadow:0 3px 11px rgba(241,90,34,.27)}
+.m-av.usr{background:rgba(241,90,34,.1);border:1px solid var(--border)}
+.m-body{display:flex;flex-direction:column;gap:3px;max-width:min(74%,560px)}
+.msg.user .m-body{align-items:flex-end}
+.bubble{padding:11px 14px;border-radius:14px;line-height:1.65;font-size:13.5px;word-break:break-word}
+.bubble.bot{background:var(--bg-card);border:1px solid var(--border);border-bottom-left-radius:4px}
+.bubble.user{background:linear-gradient(135deg,var(--brand),#d94e18);border-bottom-right-radius:4px;color:#fff;box-shadow:0 4px 16px rgba(241,90,34,.23)}
+.bubble strong{color:var(--brand)}
+.bubble.user strong{color:#ffd5c4}
+.m-time{font-size:9.5px;color:var(--text-dim);font-weight:500;padding:0 3px}
+.typing-bubble{display:flex;gap:5px;align-items:center;padding:13px 17px}
+.tdot{width:6px;height:6px;border-radius:50%;background:var(--brand);animation:tb 1.2s ease-in-out infinite}
+.tdot:nth-child(2){animation-delay:.2s}.tdot:nth-child(3){animation-delay:.4s}
+@keyframes tb{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-5px);opacity:1}}
+.welcome-card{background:var(--bg-card);border:1px solid var(--border);border-radius:17px;padding:20px;margin-bottom:4px}
+.welcome-card h2{font-family:var(--ffd);font-size:20px;margin-bottom:7px}
+.welcome-card h2 span{color:var(--brand)}
+.welcome-card p{font-size:13px;color:var(--text-muted);line-height:1.7}
+#input-section{flex-shrink:0;background:var(--bg-glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid var(--border);padding:11px 16px 15px;padding-bottom:calc(15px + env(safe-area-inset-bottom))}
+.chips{max-width:780px;margin:0 auto 9px;display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;padding:5px 13px;border-radius:20px;border:1px solid rgba(241,90,34,.22);background:rgba(241,90,34,.06);color:var(--brand);font-size:11.5px;font-weight:600;cursor:pointer;transition:all .18s;font-family:var(--ff);white-space:nowrap}
+.chip:hover{background:rgba(241,90,34,.14);border-color:var(--brand)}
+.input-wrap{max-width:780px;margin:0 auto;position:relative}
+.input-glow{position:absolute;inset:-2px;border-radius:16px;background:linear-gradient(135deg,var(--brand),var(--brand-deep));opacity:0;transition:opacity .3s;pointer-events:none;filter:blur(5px);z-index:0}
+.input-row{position:relative;z-index:1;display:flex;align-items:flex-end;gap:7px;background:var(--bg-panel);border:1px solid var(--border);border-radius:13px;padding:8px 8px 8px 13px;transition:border-color .2s}
+.input-row:focus-within{border-color:rgba(241,90,34,.48)}
+.input-row:focus-within~.input-glow{opacity:.2}
+#chat-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:var(--ff);font-size:13.5px;resize:none;line-height:1.5;max-height:115px;padding:2px 0}
+#chat-input::placeholder{color:var(--text-dim)}
+#send-btn{width:36px;height:36px;border-radius:9px;flex-shrink:0;background:linear-gradient(135deg,var(--brand),var(--brand-deep));border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .2s;box-shadow:0 3px 11px rgba(241,90,34,.3)}
+#send-btn:hover{transform:scale(1.07)}
+#send-btn:active{transform:scale(.93)}
+#send-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.footer-note{text-align:center;font-size:9.5px;color:var(--text-dim);font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-top:8px}
+#scroll-btn{position:fixed;bottom:155px;right:17px;width:33px;height:33px;border-radius:50%;background:var(--bg-panel);border:1px solid var(--border);color:var(--text-muted);font-size:13px;display:none;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;z-index:20}
+#scroll-btn.show{display:flex}
+#scroll-btn:hover{border-color:var(--brand);color:var(--brand)}
+#sov{display:none;position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.56);backdrop-filter:blur(3px)}
+
+@media(max-width:768px){
+  #sidebar{position:fixed;top:0;left:0;height:100%;transform:translateX(-100%);z-index:200}
+  #sidebar.open{transform:translateX(0)}
+  #sov.open{display:block}
+  #menu-btn{display:flex}
+  #page-title{font-size:15px}
+  .page{padding:18px 13px}
+  #chat-area{padding:16px 11px}
+  #input-section{padding:10px 12px 13px;padding-bottom:calc(13px + env(safe-area-inset-bottom))}
+  .section-title{font-size:23px}
+  .card-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+<div id="sov"></div>
+
+<div id="app">
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="s-logo">
+    <img src="logo.png" alt="BOMIS" />
+    <div class="s-logo-txt">
+      <span>Birla Open Minds</span>
+      <span>Purnea Campus</span>
+    </div>
+  </div>
+  <nav class="s-nav">
+    <div class="nav-item active" data-page="home"><span class="nav-icon">🏠</span>Home</div>
+    <div class="nav-item" data-page="chat"><span class="nav-icon">🤖</span>AI Assistant</div>
+    <div class="nav-item" data-page="admissions"><span class="nav-icon">📋</span>Admissions</div>
+    <div class="nav-item" data-page="fee"><span class="nav-icon">💰</span>Fee Structure</div>
+    <div class="nav-item" data-page="rules"><span class="nav-icon">📜</span>School Rules</div>
+    <div class="nav-item" data-page="transport"><span class="nav-icon">🚌</span>Transport</div>
+    <div class="nav-item" data-page="contact"><span class="nav-icon">📞</span>Contact</div>
+  </nav>
+  <div class="s-footer">
+    <div class="contact-card">
+      <p>📞 Helpline</p>
+      <a href="tel:9473310100">94733 10100</a>
+      <small>Mon–Sat, 9 AM – 6 PM</small>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main id="main">
+<header id="header">
+  <div class="h-left">
+    <button id="menu-btn">☰</button>
+    <div id="page-title">Home</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:9px">
+    <button id="install-btn">⬇ Install App</button>
+    <div class="live-badge"><div class="live-dot"></div><span class="live-text">Live</span></div>
+  </div>
+</header>
+
+<!-- ══ HOME ══ -->
+<div class="page active" id="page-home">
+<div class="page-wrap">
+  <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg,rgba(241,90,34,.12) 0%,var(--bg-card) 100%);border-color:rgba(241,90,34,.26)">
+    <span class="section-tag">Welcome to</span>
+    <div class="section-title">Birla Open Minds<br/><span>International School</span></div>
+    <p class="section-body">A proud collaboration between <strong style="color:var(--text)">Utthaan Charitable &amp; Educational Trust</strong> and <strong style="color:var(--text)">Birla Edutech Ltd.</strong> — a trusted name under the Birla Group. Established to serve the evolving educational needs of Purnea and aiming to become a centre of excellence in North Bihar.</p>
+    <div class="tag-row"><span class="tag">CBSE Board</span><span class="tag">Pre-School to Grade 12</span><span class="tag">The Joy of Learning</span><span class="tag">North Bihar's Premier School</span></div>
+    <div class="btn-row">
+      <a href="https://www.bomispurnea.com" target="_blank" class="btn-primary">Visit Official Website ↗</a>
+      <button class="btn-outline" onclick="goTo('chat')">Chat with AI 🤖</button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <span class="section-tag">Vision &amp; What Makes Us Different</span>
+    <div class="card-grid" style="margin-top:8px">
+      <div class="info-card"><div class="ic-icon">🌟</div><h4>Our Vision</h4><p>To nurture confident, compassionate, and curious learners prepared to lead in a dynamic world.</p></div>
+      <div class="info-card"><div class="ic-icon">🔍</div><h4>Inquiry-Based Learning</h4><p>Students learn by asking questions, exploring ideas, and discovering answers through hands-on experience.</p></div>
+      <div class="info-card"><div class="ic-icon">💡</div><h4>Values with Vision</h4><p>Soul Science program nurtures emotional intelligence and strong moral character alongside academics.</p></div>
+      <div class="info-card"><div class="ic-icon">⚽</div><h4>Holistic Development</h4><p>Beyond academics — SPEED (sports), arts, communication skills, and life-skills form the student experience.</p></div>
+      <div class="info-card"><div class="ic-icon">🏗️</div><h4>Purpose-Built Campus</h4><p>Modern architecture, smart classrooms, creative zones, ICT labs, and a Learning Management System (LMS).</p></div>
+      <div class="info-card"><div class="ic-icon">🛡️</div><h4>Safety Comes First</h4><p>Comprehensive CCTV, 24/7 security, and AC transport ensure every child is safe at school and on the road.</p></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <span class="section-tag">Our Leadership</span>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px">
+      <div class="info-card">
+        <div class="person-card"><div class="p-avatar">👩‍💼</div><div><div class="p-name">Mrs. Ruchy Sinha</div><div class="p-role">Principal, BOMIS Purnea</div></div></div>
+        <p class="p-quote">"Education is life-preparation, not merely the acquisition of knowledge. It brings about moral values and wisdom."</p>
+      </div>
+      <div class="info-card">
+        <div class="person-card"><div class="p-avatar">👨‍💼</div><div><div class="p-name">Mr. Manoj Kumar Singh</div><div class="p-role">Founder &amp; Trustee, Retd. IFS</div></div></div>
+        <p class="p-quote">"Education is a dynamic and never-ending process. We just need to set a goal and work for it."</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="section-tag">Quick Access</span>
+    <div class="card-grid" style="margin-top:10px">
+      <a href="https://app.franciscanecare.com/Login/Identifier?SchCode=BOMISP" target="_blank" class="btn-primary" style="justify-content:center">🔐 Parent e-Care Login</a>
+      <a href="https://www.bomispurnea.com/Online_Registration" target="_blank" class="btn-outline" style="justify-content:center">📝 Online Admission</a>
+      <a href="https://www.bomispurnea.com/Pay_Fees.aspx" target="_blank" class="btn-outline" style="justify-content:center">💳 Pay Fees Online</a>
+      <a href="https://www.bomispurnea.com/calendar.aspx" target="_blank" class="btn-outline" style="justify-content:center">📅 Event Calendar</a>
+      <a href="https://www.bomispurnea.com/virtual_tour.aspx" target="_blank" class="btn-outline" style="justify-content:center">🏫 Virtual Tour</a>
+      <a href="https://www.bomispurnea.com/TC.aspx" target="_blank" class="btn-outline" style="justify-content:center">📄 Transfer Certificate</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ CHAT ══ -->
+<div class="page" id="page-chat" style="padding:0">
+  <div id="chat-area">
+    <div class="msgs-wrap" id="messages">
+      <div class="welcome-card">
+        <h2>Welcome to <span>BOMIS AI</span> 🤖</h2>
+        <p>I'm your AI-powered school assistant. Ask me anything about admissions, curriculum, fees, transport, facilities, and more!</p>
+      </div>
+      <div class="msg">
+        <div class="m-av bot">🤖</div>
+        <div class="m-body">
+          <div class="bubble bot">Hello! I'm the official AI Assistant for <strong>Birla Open Minds International School, Purnea</strong>. 🎓<br/><br/>How can I assist you today? Ask about admissions, programs, school timings, fees, or any other query.</div>
+          <span class="m-time" id="welcome-time"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button id="scroll-btn">↓</button>
+  <div id="input-section">
+    <div class="chips">
+      <button class="chip" onclick="sendSug('What is the admission process?')">Admission Process</button>
+      <button class="chip" onclick="sendSug('What are the school timings?')">School Timings</button>
+      <button class="chip" onclick="sendSug('How can I pay fees online?')">Fee Payment</button>
+      <button class="chip" onclick="sendSug('What programs does BOMIS offer?')">Programs</button>
+      <button class="chip" onclick="sendSug('Tell me about campus facilities')">Campus</button>
+      <button class="chip" onclick="sendSug('What is the SPEED program?')">SPEED Program</button>
+      <button class="chip" onclick="sendSug('How do I contact the school?')">Contact Info</button>
+    </div>
+    <div class="input-wrap">
+      <div class="input-row">
+        <textarea id="chat-input" rows="1" placeholder="Ask anything about Birla Open Minds, Purnea…"></textarea>
+        <button id="send-btn">➤</button>
+      </div>
+      <div class="input-glow"></div>
+    </div>
+    <p class="footer-note">Powered by BOMIS Intelligence · Purnea Campus</p>
+  </div>
+</div>
+
+<!-- ══ ADMISSIONS ══ -->
+<div class="page" id="page-admissions">
+<div class="page-wrap">
+  <span class="section-tag">Join Our Family</span>
+  <div class="section-title">Admissions <span>2025–26</span></div>
+  <p class="section-body">We welcome students from 18 months to Grade 12. Our process is simple, transparent, and designed to understand your child holistically — not just academically.</p>
+  <div class="btn-row" style="margin-bottom:22px">
+    <a href="https://www.bomispurnea.com/Online_Registration" target="_blank" class="btn-primary">📝 Apply Online Now</a>
+    <a href="tel:9473310100" class="btn-outline">📞 Call for Enquiry</a>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <span class="section-tag">Admission Steps</span>
+    <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Online Registration</h4><p>Visit <strong style="color:var(--brand)">bomispurnea.com/Online_Registration</strong> and fill in your child's details. You'll receive an Application ID via email and SMS upon submission.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Interaction / Assessment</h4><p>A child-friendly interaction session is scheduled to understand the student's learning style, strengths, and readiness for the relevant grade level.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Document Submission</h4><p>Submit: birth certificate, previous school TC (if applicable), report cards, passport photos (4 copies), Aadhaar card of child and parent.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Fee Payment &amp; Confirmation</h4><p>Pay the admission fee via the e-Care portal or at the school office. Your seat is confirmed upon payment and document verification.</p></div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <span class="section-tag">Programs Offered — CBSE</span>
+    <div class="prog-grid">
+      <div class="prog-card"><div class="p-icon">🧒</div><h4>Pre-School</h4><div class="p-grade">18 months – 5 years</div><p>Foundational social, motor &amp; cognitive skills through play-based, activity-centred learning.</p></div>
+      <div class="prog-card"><div class="p-icon">📖</div><h4>Primary School</h4><div class="p-grade">Grades 1 – 5</div><p>Activity-based experiential learning with strong focus on literacy, numeracy, and curiosity.</p></div>
+      <div class="prog-card"><div class="p-icon">🔬</div><h4>Middle School</h4><div class="p-grade">Grades 6 – 8</div><p>Deepening expertise in Mathematics, Science, Social Studies, and Information Technology.</p></div>
+      <div class="prog-card"><div class="p-icon">🎓</div><h4>High School</h4><div class="p-grade">Grades 9 – 12</div><p>Academic rigour, board exam preparation, and career development programs for the future.</p></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <span class="section-tag">Unique Programs</span>
+    <div class="fac-item"><div class="fac-icon">🧘</div><div class="fac-body"><h4>Soul Science</h4><p>Emotional intelligence and value-based education. Focuses on empathy, self-awareness, and ethical decision-making as daily practice.</p></div></div>
+    <div class="fac-item"><div class="fac-icon">⚡</div><div class="fac-body"><h4>SPEED Program</h4><p>Specialized Physical Education &amp; Excellence in Development — structured sports training, fitness, and athletic skill building beyond standard PE.</p></div></div>
+    <div class="fac-item"><div class="fac-icon">🤖</div><div class="fac-body"><h4>STEM Learning</h4><p>Robotics, coding, and technology integration labs that prepare students for the demands of a tech-driven world from an early age.</p></div></div>
+  </div>
+
+  <div class="highlight-box">
+    <p>📞 For admission queries, contact us at <strong>94733 10100</strong> or email <strong>connect@bomispurnea.com</strong><br/>Office hours: Mon–Sat, 9:00 AM – 6:00 PM</p>
+  </div>
+</div>
+</div>
+
+<!-- ══ FEE ══ -->
+<div class="page" id="page-fee">
+<div class="page-wrap">
+  <span class="section-tag">Financials</span>
+  <div class="section-title">Fee <span>Structure</span></div>
+  <p class="section-body">BOMIS Purnea offers flexible, transparent fee payment through multiple convenient channels. Contact school for exact grade-wise amounts — they may be updated for each session.</p>
+
+  <div class="card" style="margin-bottom:16px">
+    <span class="section-tag">Fee Components</span>
+    <table>
+      <thead><tr><th>Component</th><th>Frequency</th><th>Remarks</th></tr></thead>
+      <tbody>
+        <tr><td>Tuition Fee</td><td>Monthly / Quarterly</td><td>Varies by grade level</td></tr>
+        <tr><td>Admission Fee</td><td>One-time</td><td>At time of admission</td></tr>
+        <tr><td>Annual / Development Fee</td><td>Yearly</td><td>Infrastructure &amp; examination</td></tr>
+        <tr><td>Transport Fee</td><td>Monthly</td><td>AC buses — route-based pricing</td></tr>
+        <tr><td>Activity Fee</td><td>Annual</td><td>Sports, arts, STEM &amp; labs</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:11px;color:var(--text-dim);margin-top:11px">* For exact amounts per grade, please log in to the e-Care portal or contact the school office directly.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <span class="section-tag">Payment Methods</span>
+    <div class="fac-item"><div class="fac-icon">💻</div><div class="fac-body"><h4>e-Care Web Portal</h4><p>Login at <strong style="color:var(--brand)">app.franciscanecare.com</strong> with your parent credentials. School code: <strong style="color:var(--brand)">BOMISP</strong>. View fee ledger, pay online, and download receipts instantly.</p></div></div>
+    <div class="fac-item"><div class="fac-icon">📱</div><div class="fac-body"><h4>e-Care Pro Mobile App</h4><p>Download from Google Play Store or Apple App Store. Search <strong style="color:var(--brand)">"e-Care Pro"</strong> and enter school code <strong style="color:var(--brand)">BOMISP</strong>. Manage fees, attendance, homework &amp; leave applications.</p></div></div>
+    <div class="fac-item"><div class="fac-icon">💳</div><div class="fac-body"><h4>Online Payment Page</h4><p>Visit <strong style="color:var(--brand)">bomispurnea.com/Pay_Fees.aspx</strong> for direct payment via UPI, net banking, or debit/credit cards.</p></div></div>
+    <div class="fac-item"><div class="fac-icon">🏦</div><div class="fac-body"><h4>School Fee Counter</h4><p>Visit the school office (Mon–Sat, 9 AM–3 PM) for cash or demand draft payment. Official receipts issued immediately.</p></div></div>
+  </div>
+
+  <div class="btn-row" style="margin-bottom:16px">
+    <a href="https://app.franciscanecare.com/Login/Identifier?SchCode=BOMISP" target="_blank" class="btn-primary">🔐 Login to e-Care Portal</a>
+    <a href="https://www.bomispurnea.com/Pay_Fees.aspx" target="_blank" class="btn-outline">💳 Pay Fees Online</a>
+  </div>
+
+  <div class="highlight-box">
+    <p>📱 Download <strong>e-Care Pro</strong> from Play Store / App Store. Enter school code <strong>BOMISP</strong> to access your complete fee dashboard, attendance, and leave management — all in one app.</p>
+  </div>
+</div>
+</div>
+
+<!-- ══ RULES ══ -->
+<div class="page" id="page-rules">
+<div class="page-wrap">
+  <span class="section-tag">Discipline &amp; Conduct</span>
+  <div class="section-title">School <span>Rules &amp; Guidelines</span></div>
+  <p class="section-body">BOMIS Purnea maintains a respectful, inclusive, and disciplined environment so every child can thrive. These guidelines reflect our core philosophy of "The Joy of Learning."</p>
+
+  <div class="card" style="margin-bottom:16px">
+    <span class="section-tag">General Conduct</span>
+    <div class="rule-item"><div class="rule-dot"></div><p>All students must wear the prescribed school uniform every working day. Uniform must be clean, pressed, and complete with the school ID card visibly worn.</p></div>
+    <div class="rule-item"><div class="rule-dot"></div><p>Students must arrive before the school bell. School hours are <strong style="color:var(--text)">9:00 AM – 3:00 PM</strong>. Late arrivals require a written note from a parent or guardian.</p></div>
+    <div class="rule-item"><div class="rule-dot"></div><p>Mobile phones are not permitted on school premises during school hours without explicit written permission from the Principal's office.</p></div>
+    <div class="rule-item"><div class="rule-dot"></div><p>Respectful behaviour towards teachers, staff, fellow students, and visitors is expected at all times — both inside school and during school-related activities.</p></div>
+    <div class="rule-item"><div class="rule-dot"></div><p>Any form of bullying, ragging, or discrimination will be addressed with strict disciplinary action as per CBSE norms and school policy.</p></div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <span class="section-tag">Academic Rules</span>
+    <div class="rule-item"><div class="rule-dot"></div><p>Homework and assignments must be submitted on the due date. Repeated non-submission may result in a parent-teacher meeting.</p></div>
+    <div class="rule-item"><div class="rule-dot"></div><p>A minimum of <strong style="color:var(--text)">75% attendance</strong> is mandatory to be eligible for term examinations, as per CBSE guidelines.</p></div>
+    <div class="rule-item"><div class="rule-dot"></div><p>School diaries / planners must be maintained regularly and signed by parents. They are the primary communication bridge between school and home.</p></div>
+    <div class="rule-item"><div class="rule-dot"></div><p>Students must handle school property with care — library books, lab equipment, and furniture. Any damage must be reported to the class teacher immediately.</p></div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <span class="section-tag">Attendance &amp; Leave</span>
+    <div class="rule-item"><div class="rule-dot"></div><p>Leave of absence must be applied in advance via the <strong style="color:var(--text)">e-Care Pro app</strong> or a written application submitted to the class teacher.</p></div>
+    <div class="rule-item"><div class="rule-dot"></div><p>Medical leave beyond 3 consecutive days requires a valid doctor's certificate upon return to school.</p></div>
+    <div class="rule-item"><div class="rule-dot"></div><p>Students absent during examinations without prior written notice will not be given a re-test unless truly exceptional circumstances are verified.</p></div>
+  </div>
+
+  <div class="card">
+    <span class="section-tag">Transport &amp; Campus Safety</span>
+    <div class="rule-item"><div class="rule-dot"></div><p>Students using school buses must board and alight only at their designated stops. Changing stops requires a prior written request to the transport coordinator.</p></div>
+    <div class="rule-item"><div class="rule-dot"></div><p>No student may stand in the bus aisle. All students must remain seated with their seat belt fastened throughout the journey.</p></div>
+    <div class="rule-item"><div class="rule-dot"></div><p>Students must not leave school premises without written permission. Early departure must be arranged in advance with a parent or authorised guardian pickup.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- ══ TRANSPORT ══ -->
+<div class="page" id="page-transport">
+<div class="page-wrap">
+  <span class="section-tag">Getting Here</span>
+  <div class="section-title">Transport <span>Facilities</span></div>
+  <p class="section-body">BOMIS Purnea provides safe, comfortable, and air-conditioned transport across Purnea city and surrounding areas. Our dedicated fleet ensures every child commutes in comfort and under full supervision.</p>
+
+  <div class="card" style="margin-bottom:16px">
+    <span class="section-tag">Fleet Features</span>
+    <div class="fac-item"><div class="fac-icon">❄️</div><div class="fac-body"><h4>Fully Air-Conditioned Buses</h4><p>All school buses are AC-equipped, ensuring a comfortable commute in every season — especially Purnea's hot summers.</p></div></div>
+    <div class="fac-item"><div class="fac-icon">📍</div><div class="fac-body"><h4>GPS-Tracked Vehicles</h4><p>Real-time GPS tracking on all buses. Parents can monitor bus location through the e-Care Pro app for complete peace of mind.</p></div></div>
+    <div class="fac-item"><div class="fac-icon">👩‍✈️</div><div class="fac-body"><h4>Trained Attendants</h4><p>Each bus has a dedicated attendant to assist younger students, ensure safety during boarding/alighting, and maintain discipline.</p></div></div>
+    <div class="fac-item"><div class="fac-icon">🛡️</div><div class="fac-body"><h4>Regular Maintenance &amp; Safety Checks</h4><p>All buses undergo regular safety inspections. Student attendance on buses is tracked digitally via the e-Care system.</p></div></div>
+    <div class="fac-item"><div class="fac-icon">⏰</div><div class="fac-body"><h4>Punctual Schedules</h4><p>Fixed pickup and drop timings ensure students arrive on time and parents can plan their day with certainty.</p></div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <span class="section-tag">Coverage Areas in Purnea</span>
+    <div class="tag-row">
+      <span class="tag">Sarna Chowk</span><span class="tag">Rambagh</span><span class="tag">Khairuganj</span>
+      <span class="tag">City Centre</span><span class="tag">Raniganj</span><span class="tag">Kasba</span>
+      <span class="tag">Line Bazar</span><span class="tag">Bhatta Bazar</span><span class="tag">Judges Court Road</span>
+    </div>
+    <p style="font-size:11.5px;color:var(--text-dim);margin-top:13px">* Contact the school for the complete route list and stop timings specific to your area.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <span class="section-tag">Transport Fee (Indicative)</span>
+    <table>
+      <thead><tr><th>Zone / Distance</th><th>Billing</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Near school (up to 3 km)</td><td>Monthly</td><td>Contact school for amount</td></tr>
+        <tr><td>Mid-range (3–8 km)</td><td>Monthly</td><td>Contact school for amount</td></tr>
+        <tr><td>Far zone (8+ km)</td><td>Monthly</td><td>Contact school for amount</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:11px;color:var(--text-dim);margin-top:10px">* Transport fee is billed monthly and can be paid via the e-Care portal or at the school office.</p>
+  </div>
+
+  <div class="highlight-box">
+    <p>📞 For route details, stop locations, and fare enquiries: call <strong>94733 10100</strong> or email <strong>connect@bomispurnea.com</strong> (Mon–Sat, 9 AM – 6 PM).</p>
+  </div>
+</div>
+</div>
+
+<!-- ══ CONTACT ══ -->
+<div class="page" id="page-contact">
+<div class="page-wrap">
+  <span class="section-tag">Get in Touch</span>
+  <div class="section-title">Contact <span>Us</span></div>
+  <p class="section-body">We're always happy to hear from you — admissions queries, parent concerns, or general questions about our school. Reach us through any channel below.</p>
+
+  <div class="card" style="margin-bottom:16px">
+    <span class="section-tag">Contact Details</span>
+    <div class="contact-row"><div class="c-icon">📍</div><div><div class="c-label">Address</div><div class="c-value">Near Sarna Chowk, Rambagh, Khairuganj, Purnia, Bihar – 854301</div></div></div>
+    <div class="contact-row"><div class="c-icon">📞</div><div><div class="c-label">Phone</div><div class="c-value"><a href="tel:9473310100">94733 10100</a></div></div></div>
+    <div class="contact-row"><div class="c-icon">⏰</div><div><div class="c-label">Office Hours</div><div class="c-value">Monday – Saturday, 9:00 AM – 6:00 PM</div></div></div>
+    <div class="contact-row"><div class="c-icon">📧</div><div><div class="c-label">General Enquiry</div><div class="c-value"><a href="mailto:connect@bomispurnea.com">connect@bomispurnea.com</a></div></div></div>
+    <div class="contact-row"><div class="c-icon">🎓</div><div><div class="c-label">Principal's Office</div><div class="c-value"><a href="mailto:principal.purnia@birlaopenminds.com">principal.purnia@birlaopenminds.com</a></div></div></div>
+    <div class="contact-row"><div class="c-icon">🌐</div><div><div class="c-label">Website</div><div class="c-value"><a href="https://www.bomispurnea.com" target="_blank">www.bomispurnea.com</a></div></div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <span class="section-tag">Find Us on Map</span>
+    <div class="map-wrap">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3584.8!2d87.4748!3d25.7752!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ef72b3d9a8bb71%3A0xda47e3d94db89a5e!2sBirla%20Open%20Minds%20International%20School!5e0!3m2!1sen!2sin!4v1710000000001!5m2!1sen!2sin" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="BOMIS Purnea Location"></iframe>
+    </div>
+    <div class="btn-row" style="margin-top:13px">
+      <a href="https://maps.google.com/?q=Birla+Open+Minds+International+School+Purnia+Bihar" target="_blank" class="btn-primary">📍 Open in Google Maps</a>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <span class="section-tag">Follow Us</span>
+    <div class="social-row">
+      <a href="https://www.facebook.com" target="_blank" class="social-btn">👤 Facebook</a>
+      <a href="https://www.instagram.com" target="_blank" class="social-btn">📸 Instagram</a>
+      <a href="http://www.youtube.com" target="_blank" class="social-btn">▶️ YouTube</a>
+      <a href="https://twitter.com" target="_blank" class="social-btn">🐦 Twitter / X</a>
+      <a href="https://in.linkedin.com" target="_blank" class="social-btn">💼 LinkedIn</a>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <p>Have a question? Try our <strong>AI Assistant</strong> for instant answers — or call us at <strong>94733 10100</strong>.</p>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="goTo('chat')">🤖 Ask AI Assistant</button>
+      <a href="https://www.bomispurnea.com/menu/ContactDirection/Mail-Us.aspx" target="_blank" class="btn-outline">✉️ Send a Message</a>
+      <a href="https://www.bomispurnea.com/menu/GuestBook/Guest_Book.aspx" target="_blank" class="btn-outline">📖 Guest Book</a>
+    </div>
+  </div>
+</div>
+</div>
+
+</main>
+</div>
+
+<script>
+// ── Navigation ──
+const pages = {home:'page-home',chat:'page-chat',admissions:'page-admissions',fee:'page-fee',rules:'page-rules',transport:'page-transport',contact:'page-contact'};
+const titles = {home:'Home',chat:'AI Assistant',admissions:'Admissions',fee:'Fee Structure',rules:'School Rules',transport:'Transport',contact:'Contact Us'};
+let cur = 'home';
+
+function goTo(page) {
+  document.getElementById(pages[cur]).classList.remove('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(pages[page]).classList.add('active');
+  document.querySelector(`[data-page="${page}"]`).classList.add('active');
+  document.getElementById('page-title').textContent = titles[page];
+  cur = page;
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sov').classList.remove('open');
+}
+document.querySelectorAll('.nav-item').forEach(el => el.addEventListener('click', () => goTo(el.dataset.page)));
+
+// ── Sidebar ──
+const sidebar = document.getElementById('sidebar');
+const sov = document.getElementById('sov');
+document.getElementById('menu-btn').addEventListener('click', () => { sidebar.classList.toggle('open'); sov.classList.toggle('open'); });
+sov.addEventListener('click', () => { sidebar.classList.remove('open'); sov.classList.remove('open'); });
+
+// ── Chatbot ──
+const API_KEY = "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";
+const MODEL   = "nvidia/nemotron-3-super-120b-a12b:free";
+const MAX_H   = 12;
+const SYSTEM  = `You are the official AI Assistant for Birla Open Minds International School (BOMIS), Purnea.
+
+SCHOOL KNOWLEDGE BASE:
+1. Full name: Birla Open Minds International School, Purnea. Collaboration: Utthaan Charitable & Educational Trust + Birla Edutech Ltd (Birla Group). Principal: Mrs. Ruchy Sinha. Founder: Mr. Manoj Kumar Singh (Retd. IFS).
+2. Vision: Nurture confident, compassionate, curious learners. Philosophy: "The Joy of Learning." Child-centric, constructivist, hands-on approach.
+3. Location: Near Sarna Chowk, Rambagh, Khairuganj, Purnia, Bihar 854301. Phone: 9473310100. Email: connect@bomispurnea.com. Principal: principal.purnia@birlaopenminds.com. Website: bomispurnea.com. Hours: Mon-Sat, 9AM-6PM.
+4. Curriculum: CBSE board. Pre-School (18 months-5 yrs), Primary (Gr 1-5), Middle (Gr 6-8), High School (Gr 9-12).
+5. Unique Programs: Soul Science (emotional intelligence & values), SPEED (physical education & sports excellence), STEM Learning (robotics, coding, technology labs).
+6. Campus: Smart classrooms, ICT labs, 2D/3D animated resources, LMS, CCTV, 24/7 security, AC transport, sports facilities, creative zones, virtual tour on website.
+7. Fee Payment: e-Care portal (app.franciscanecare.com, school code BOMISP) or e-Care Pro app (Play Store/App Store) or bomispurnea.com/Pay_Fees.aspx.
+8. Admissions: bomispurnea.com/Online_Registration. Steps: Online registration → Interaction → Documents → Fee.
+9. Parent login: app.franciscanecare.com/Login/Identifier?SchCode=BOMISP
+
+STRICT RULES:
+1. Only answer BOMIS Purnea questions. For unrelated topics say: "I am sorry, I am only programmed to assist with questions about Birla Open Minds International School, Purnea."
+2. Always mention 9473310100 or e-Care for admission/fee queries.
+3. Be concise, warm, helpful. Use bullet points for lists.`;
+
+let hist = [{role:'system',content:SYSTEM}];
+let busy = false;
+
+const msgsEl = document.getElementById('messages');
+const chatA  = document.getElementById('chat-area');
+const inp    = document.getElementById('chat-input');
+const sBtn   = document.getElementById('send-btn');
+const scrBtn = document.getElementById('scroll-btn');
+
+document.getElementById('welcome-time').textContent = 'Bot • ' + ft(new Date());
+inp.addEventListener('input', () => { inp.style.height='auto'; inp.style.height=Math.min(inp.scrollHeight,115)+'px'; });
+inp.addEventListener('keydown', e => { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} });
+sBtn.addEventListener('click', send);
+chatA.addEventListener('scroll', () => { scrBtn.classList.toggle('show', chatA.scrollHeight-chatA.scrollTop-chatA.clientHeight>100); });
+scrBtn.addEventListener('click', () => chatA.scrollTo({top:chatA.scrollHeight,behavior:'smooth'}));
+
+function ft(d){return d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true})}
+function sd(){setTimeout(()=>chatA.scrollTo({top:chatA.scrollHeight,behavior:'smooth'}),50)}
+
+function addMsg(role,text){
+  const bot=role==='bot';
+  const d=document.createElement('div');
+  d.className=`msg${bot?'':' user'}`;
+  const h=text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br/>');
+  d.innerHTML=`<div class="m-av ${bot?'bot':'usr'}">${bot?'🤖':'👤'}</div><div class="m-body"><div class="bubble ${bot?'bot':'user'}">${h}</div><span class="m-time">${bot?'Bot':'You'} • ${ft(new Date())}</span></div>`;
+  msgsEl.appendChild(d); sd();
+}
+
+function showT(){
+  const d=document.createElement('div');
+  d.className='msg';d.id='typing';
+  d.innerHTML='<div class="m-av bot">🤖</div><div class="m-body"><div class="bubble bot typing-bubble"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div></div>';
+  msgsEl.appendChild(d);sd();
+}
+function hideT(){const e=document.getElementById('typing');if(e)e.remove();}
+
+async function send(){
+  const text=inp.value.trim();
+  if(!text||busy)return;
+  inp.value='';inp.style.height='auto';
+  busy=true;sBtn.disabled=true;
+  addMsg('user',text);
+  hist.push({role:'user',content:text});
+  showT();
+  try{
+    const r=await fetch('https://openrouter.ai/api/v1/chat/completions',{
+      method:'POST',
+      headers:{'Authorization':`Bearer ${API_KEY}`,'Content-Type':'application/json','HTTP-Referer':location.href,'X-Title':'BOMIS Purnea AI'},
+      body:JSON.stringify({model:MODEL,messages:hist,max_tokens:600,temperature:0.7})
+    });
+    const data=await r.json();
+    if(data.choices?.[0]){
+      const reply=data.choices[0].message.content;
+      hist.push({role:'assistant',content:reply});
+      if(hist.length>MAX_H+1)hist=[hist[0],...hist.slice(-MAX_H)];
+      hideT();addMsg('bot',reply);
+    }else{throw new Error(data.error?.message||JSON.stringify(data));}
+  }catch(err){
+    hideT();console.error(err);
+    addMsg('bot',`⚠️ **Error:** ${err.message}\n\nPlease try again or call **9473310100** (Mon–Sat, 9 AM–6 PM).`);
+  }
+  busy=false;sBtn.disabled=false;inp.focus();
+}
+
+function sendSug(t){inp.value=t;send();}
+
+// ── PWA Install ──
+let dp=null;
+const ib=document.getElementById('install-btn');
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;ib.classList.add('show');});
+ib.addEventListener('click',async()=>{if(!dp)return;dp.prompt();const{outcome}=await dp.userChoice;if(outcome==='accepted')ib.classList.remove('show');dp=null;});
+window.addEventListener('appinstalled',()=>ib.classList.remove('show'));
+
+// ── Service Worker ──
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(e=>console.error(e)));
+}
+</script>
+</body>
+</html>

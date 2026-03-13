@@ -1,0 +1,27 @@
+{
+  "name": "BOMIS Purnea – AI Assistant",
+  "short_name": "BOMIS AI",
+  "description": "AI Admission Assistant for Birla Open Minds International School, Purnea",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f0a06",
+  "theme_color": "#f15a22",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education"],
+  "lang": "en",
+  "scope": "/"
+}
